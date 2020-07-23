@@ -21,21 +21,14 @@ This model performs sentiment analysis on Italian political twitter sentences. I
   
 ```python
 import torch
-from torch import nn  
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from torch import nn 
 
+text = "Giueseppe Rossi è un pessimo politico"
+input_ids = tokenizer.encode(text, add_special_tokens=True, return_tensors= 'pt')
 
-tokenizer = AutoTokenizer.from_pretrained("unideeplearning/polibert_sa")
-model = AutoModelForSequenceClassification.from_pretrained("unideeplearning/polibert_sa")
-
-text = "Giueseppe Rossi è un ottimo politico"
-input_ids = tokenizer.encode(text, add_special_tokens=True)
-
-t = torch.tensor(input_ids).long()
-t = t.unsqueeze(0)
-
-logits, = model(t)
+logits, = model(input_ids)
 logits = logits.squeeze(0)
+
 prob = nn.functional.softmax(logits, dim=0)
 
 # 0 Negative, 1 Neutral, 2 Positive 
