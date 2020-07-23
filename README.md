@@ -13,7 +13,7 @@ widget:
   
 ## Model description  
   
-This model performs sentiment analysis on Italian political twitter sentences. It was trained starting from an instance of [bert-base-italian-uncased-xxl] and fine-tuned on an Italian dataset of tweets.
+This model performs sentiment analysis on Italian political twitter sentences. It was trained starting from an instance of "bert-base-italian-uncased-xxl" and fine-tuned on an Italian dataset of tweets.
   
 ## Intended uses & limitations  
   
