@@ -1,50 +1,55 @@
 ---
-language: "ISO 639-1 code for your language, or `multilingual`"
-thumbnail: "url to a thumbnail used in social sharing"
+language: it
+thumbnail: https://www.unideeplearning.com/wp-content/uploads/2019/10/logo_unideep-2.png
 tags:
-- array
-- of
-- tags
-license: "any valid license identifier"
-datasets:
-- array of dataset identifiers
-metrics:
-- array of metric identifiers
+- sentiment
+- Italian
+license: MIT
+widget:
+- text: 'Giuseppe Rossi è un ottimo politico'
 ---
 
-# Model name
-
-## Model description
-
-You can embed local or remote images using `![](...)`
-
-## Intended uses & limitations
-
-#### How to use
-
+# 🤗 + polibert_SA - POLItic BERT based Sentiment Analysis
+  
+## Model description  
+  
+This model performs sentiment analysis on Italian political twitter sentences. It was trained starting from an instance of [bert-base-italian-uncased-xxl] and fine-tuned on an Italian dataset of tweets.
+  
+## Intended uses & limitations  
+  
+#### How to use  
+  
 ```python
-# You can include sample code which will be formatted
-```
+import torch
+from torch import nn  
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-#### Limitations and bias
 
-Provide examples of latent issues and potential remediations.
+tokenizer = AutoTokenizer.from_pretrained("unideeplearning/polibert_sa")
+model = AutoModelForSequenceClassification.from_pretrained("unideeplearning/polibert_sa")
 
-## Training data
+text = "Giueseppe Rossi è un ottimo politico"
+input_ids = tokenizer.encode(text, add_special_tokens=True)
 
-Describe the data you used to train the model.
-If you initialized it with pre-trained weights, add a link to the pre-trained model card or repository with description of the pre-training data.
+t = torch.tensor(input_ids).long()
+t = t.unsqueeze(0)
 
-## Training procedure
+logits, = model(t)
+logits = logits.squeeze(0)
+prob = nn.functional.softmax(logits, dim=0)
 
-Preprocessing, hardware used, hyperparameters...
+# 0 Negative, 1 Neutral, 2 Positive 
+print(prob.argmax().tolist())
+```  
+  
+#### Hyperparameters
 
-## Eval results
+- Optimizer: **AdamW** with learning rate of **2e-5**, epsilon of **1e-8**
+- Max epochs: **2**
+- Batch size: **16**
 
-### BibTeX entry and citation info
+## Acknowledgments
 
-```bibtex
-@inproceedings{...,
-  year={2020}
-}
-```
+Thanks to the support from: 
+the [Hugging Face](https://huggingface.co/), Unione Professionisti (https://www.unioneprofessionisti.com/)
+
